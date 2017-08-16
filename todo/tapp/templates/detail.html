@@ -1,0 +1,145 @@
+{% block content %}
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<div align="center">
+<form class="navbar-form navbar-left" action="/search/" method="post">
+    {% csrf_token %}
+	<div class="form-group">
+	    <input type="text" class="form-control" placeholder="Search" name="search" id="search_box">
+	    <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+</form>
+</div>
+<hr>
+<br>
+
+<ul>
+    <hr/>
+<li>
+    <h3>{{ name.date }}</h3>
+    <h4>{{ name.time }}</h4>
+    <h2>{{ name.label }}</h2>
+
+    <span style="color:blue"><small><small>(Go to Edit, if you want to change whether the process is done!)</small></small></span><br>
+    <!--{{ now }}<br>-->
+    <!--{{ now.date }}<br>-->
+    <!--{{ i.date }}<br>-->
+    <!--{{ i.time }}<br>-->
+    <!--{{ i.time.hour }}<br>-->
+    <!--{{ i.time.minute }}<br>-->
+    {% ifequal name.check True %}
+        <div class="panel panel-success" style="width:100px">
+            <div class="panel-heading" style="width:100px">Completed!</div>
+            </div>
+        </div>
+    {% else %}
+    <div style="color:red">
+        {% if name.date.year < now.date.year %}
+            <div class="panel panel-danger" style="width:190px">
+                <div class="panel-heading" style="width:190px">Event DateTime is Over!</div>
+                </div>
+            </div>
+            {% elif name.date.year == now.date.year %}
+                {% if name.date.month < now.date.month %}
+                    <div class="panel panel-danger" style="width:190px">
+                        <div class="panel-heading" style="width:190px">Event DateTime is Over!</div>
+                        </div>
+                    </div>
+                {% elif name.date.month == now.date.month %}
+                    {% if name.date.day < now.date.day %}
+                        <div class="panel panel-danger" style="width:190px">
+                            <div class="panel-heading" style="width:190px">Event DateTime is Over!</div>
+                            </div>
+                        </div>
+                    {% elif name.date.day == now.date.day %}
+                        {% if i.time.hour > now.time.hour %}
+                            <div class="panel panel-info" style="width:100px">
+                                <div class="panel-heading" style="width:100px">It's Today!</div>
+                                </div>
+                            </div>
+                        {% elif name.time.hour < now.time.hour %}
+                            <div class="panel panel-danger" style="width:190px">
+                                <div class="panel-heading" style="width:190px">Event DateTime is Over!</div>
+                                </div>
+                            </div>
+                        {% elif name.time.hour == now.time.hour %}
+                            {% if i.time.minute > now.time.minute %}
+                                <div class="panel panel-info" style="width:140px">
+                                    <div class="panel-heading" style="width:140px">Few minutes left!</div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="panel panel-danger" style="width:190px">
+                                    <div class="panel-heading" style="width:190px">Event DateTime is Over!</div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endifequal %}
+
+    <!--<div style="color:red">-->
+    <!--{% if i.date.year < now.date.year %}-->
+        <!--<div class="panel panel-danger" style="width:190px">-->
+            <!--<div class="panel-heading" style="width:190px">Event DateTime is Over!</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--{% elif i.date.year == now.date.year %}-->
+            <!--{% if i.date.month < now.date.month %}-->
+                <!--<div class="panel panel-danger" style="width:190px">-->
+                    <!--<div class="panel-heading" style="width:190px">Event DateTime is Over!</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--{% elif i.date.month == now.date.month %}-->
+                <!--{% if i.date.day < now.date.day %}-->
+                    <!--<div class="panel panel-danger" style="width:190px">-->
+                        <!--<div class="panel-heading" style="width:190px">Event DateTime is Over!</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--{% elif i.date.day == now.date.day %}-->
+                    <!--{% if i.time.hour > now.time.hour %}-->
+                        <!--<div class="container">-->
+                        <!--<div class="panel-heading"><span style="color:green">It's Today!</span></div>-->
+                        <!--</div>-->
+                        <!--<div class="panel panel-success" style="width:100px">-->
+                            <!--<div class="panel-heading" style="width:100px">It's Today!</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--{% elif i.time.hour < now.time.hour %}-->
+                        <!--<div class="panel panel-danger" style="width:190px">-->
+                            <!--<div class="panel-heading" style="width:190px">Event DateTime is Over!</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--{% elif i.time.hour == now.time.hour %}-->
+                        <!--{% if i.time.minute > now.time.minute %}-->
+                            <!--<div class="panel panel-success" style="width:100px">-->
+                                <!--<div class="panel-heading" style="width:100px">It's Today!</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--{% else %}-->
+                            <!--<div class="panel panel-danger" style="width:190px">-->
+                                <!--<div class="panel-heading" style="width:190px">Event DateTime is Over!</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--{% endif %}-->
+                    <!--{% endif %}-->
+                <!--{% endif %}-->
+            <!--{% endif %}-->
+        <!--{% endif %}-->
+    <!--</div>-->
+    <!--Click <a href="{% url 'home' %}">Here</a> if the event is completed!<br>-->
+    <a href="{% url 'delete' name.id %}" class="btn btn-primary btn-md">Delete</a>
+    <a href="{% url 'edit' name.id %}" class="btn btn-primary btn-md">Edit</a>
+    <hr />
+</li>
+</ul>
+<div style="padding-left:10px">
+    <a href="/" class="btn btn-default">Home page</a>
+</div>
+    <hr>
+
+{% endblock %}
